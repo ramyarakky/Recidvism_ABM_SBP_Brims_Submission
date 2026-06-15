@@ -332,6 +332,6 @@ pip install mesa numpy pandas matplotlib tqdm psutil
 ## Citation
 
 ```
-Rakkiappan, R., & Kavak, H. (2026). An Agent-Based Model of Recidivism and Fairness.
+Rakkiappan, R., & Kavak, H. (2026). An Agent-Based Model of Recidivism.
 In Proceedings of SBP-BRiMS 2026.
 ```
