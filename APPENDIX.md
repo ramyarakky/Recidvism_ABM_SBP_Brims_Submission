@@ -84,9 +84,8 @@ to reflect diminishing marginal risk contributions. Binary and bounded
 continuous variables are used without transformation.
 
 Race and gender are excluded from the risk score consistent with the
-race-neutral design of the Pennsylvania Commission on Sentencing Risk
-Assessment (PCRA) (PCRA, 2016; Skeem & Lowenkamp, 2016). Full attribute
-weights are reported in Table A1 above.
+race-neutral design of the Post Conviction Risk Assessment (PCRA) (PCRA, 2016; Skeem & Lowenkamp, 2016).
+Full attribute weights are reported in Table A1 above.
 
 ---
 
