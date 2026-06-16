@@ -74,14 +74,12 @@ where $\beta_k$ denotes the coefficients estimated from the NIJ
 Recidivism Forecasting Challenge dataset (2021) using a logistic
 regression model, and $f_k(\cdot)$ is an attribute-specific
 transformation function. Count-valued variables (e.g., prior convictions
-and program participation counts) are log-compressed:
+and program participation counts) are log-compressed to reflect diminishing marginal risk contributions.
+Binary and bounded continuous variables are used without transformation.
 
 $$
 f(x) = \log(1 + x)
 $$
-
-to reflect diminishing marginal risk contributions. Binary and bounded
-continuous variables are used without transformation.
 
 Race and gender are excluded from the risk score consistent with the
 race-neutral design of the Post Conviction Risk Assessment (PCRA) (PCRA, 2016; Skeem & Lowenkamp, 2016).
