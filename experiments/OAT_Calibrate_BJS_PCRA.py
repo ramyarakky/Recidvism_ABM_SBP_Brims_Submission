@@ -2399,8 +2399,8 @@ def plot_equifinality_single_panel(baseline_tier, calibrated_tier,
     offsets = [-w, 0.0, w]
 
     bar_specs = [
-        (offsets[0], uncal_vals, C["baseline"],   "Uncalibrated (γ = 0.0)"),
-        (offsets[1], cal_vals,   C["calibrated"], f"Calibrated ({gamma_label})"),
+        (offsets[0], uncal_vals, C["baseline"],   "Uncalibrated γ = 0.0"),
+        (offsets[1], cal_vals,   C["calibrated"], f"Calibrated {gamma_label}"),
         (offsets[2], tgt_vals,   C["bjs"],        "PCRA empirical target"),
     ]
 
@@ -2415,17 +2415,17 @@ def plot_equifinality_single_panel(baseline_tier, calibrated_tier,
                     fontsize=8.5, fontweight="bold", color=colour)
 
     # MAE summary box (top-right)
-    mae_uncal  = float(np.mean([abs(u - t) for u, t in zip(uncal_vals, tgt_vals)]))
-    mae_cal    = float(np.mean([abs(c - t) for c, t in zip(cal_vals,   tgt_vals)]))
-    reduction  = ((mae_uncal - mae_cal) / mae_uncal * 100) if mae_uncal > 0 else 0.0
-    ax.text(0.98, 0.97,
-            f"Mean |Δ| uncalibrated : {mae_uncal * 100:.2f} pp\n"
-            f"Mean |Δ| calibrated   : {mae_cal   * 100:.2f} pp\n"
-            f"MAE reduction         : {reduction:+.1f}%",
-            transform=ax.transAxes, ha="right", va="top",
-            fontsize=9, family="monospace", color="#333333",
-            bbox=dict(boxstyle="round,pad=0.45", facecolor="white",
-                      edgecolor="#CCCCCC", alpha=0.95, linewidth=1.0))
+    #mae_uncal  = float(np.mean([abs(u - t) for u, t in zip(uncal_vals, tgt_vals)]))
+    #mae_cal    = float(np.mean([abs(c - t) for c, t in zip(cal_vals,   tgt_vals)]))
+    #reduction  = ((mae_uncal - mae_cal) / mae_uncal * 100) if mae_uncal > 0 else 0.0
+    #ax.text(0.98, 0.97,
+    #        f"Mean |Δ| uncalibrated : {mae_uncal * 100:.2f} pp\n"
+    #        f"Mean |Δ| calibrated   : {mae_cal   * 100:.2f} pp\n"
+    #        f"MAE reduction         : {reduction:+.1f}%",
+    #        transform=ax.transAxes, ha="right", va="top",
+    #        fontsize=9, family="monospace", color="#333333",
+    #        bbox=dict(boxstyle="round,pad=0.45", facecolor="white",
+    #                  edgecolor="#CCCCCC", alpha=0.95, linewidth=1.0))
 
     # Per-tier Δ label (calibrated vs target)
     for i, (cv, tv) in enumerate(zip(cal_vals, tgt_vals)):
@@ -2457,12 +2457,12 @@ def plot_equifinality_single_panel(baseline_tier, calibrated_tier,
     ax.set_title("PCRA Risk-Tier-Stratified Rearrest Rates:\n"
                  "Before vs. After Stage 2 Calibration",
                  fontsize=13, fontweight="bold", pad=14)
-    fig.text(0.5, 0.01,
-             f"3-Year cumulative rearrest rate by PCRA risk tier  |  "
-             f"Calibrated {gamma_label}  |  "
-             f"Source: Johnson (2023), Federal Probation 87(2), Table 6",
-             ha="center", va="bottom", fontsize=9,
-             color="#555555", style="italic")
+    #fig.text(0.5, 0.01,
+    #         f"3-Year cumulative rearrest rate by PCRA risk tier  |  "
+    #         f"Calibrated {gamma_label}  |  "
+    #         f"Source: Johnson (2023), Federal Probation 87(2), Table 6",
+    #         ha="center", va="bottom", fontsize=9,
+    #         color="#555555", style="italic")
 
     plt.tight_layout(rect=[0, 0.04, 1, 1])
     path = os.path.join(outdir, filename)

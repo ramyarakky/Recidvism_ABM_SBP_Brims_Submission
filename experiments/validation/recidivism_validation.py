@@ -925,12 +925,16 @@ def chart2_cumulative_bar(cum_mean, cum_lo, cum_hi, cum_sd, out_dir):
 #           - σ summary added
 #           - bottom legend separated from gap legend (no overlap)
 # =============================================================================
+# =============================================================================
+# CHART 3 — Print-ready version for SBP-BRiMS paper (textwidth)
+#           Taller aspect ratio, all fonts sized for PDF at ~6.5in wide
+# =============================================================================
 def chart3_cumulative_by_offense(off_mean, off_lo, off_hi, off_sd, out_dir):
     fig = make_subplots(
         rows=1, cols=4,
         subplot_titles=[f"<b>{g}</b>" for g in OFFENSE_GROUPS],
         shared_yaxes=True,
-        horizontal_spacing=0.04,
+        horizontal_spacing=0.05,
     )
 
     for col_idx, g in enumerate(OFFENSE_GROUPS, start=1):
@@ -949,82 +953,92 @@ def chart3_cumulative_by_offense(off_mean, off_lo, off_hi, off_sd, out_dir):
             fill="toself",
             fillcolor=(f"rgba({int(colour[1:3],16)},"
                        f"{int(colour[3:5],16)},"
-                       f"{int(colour[5:7],16)},0.15)"),
+                       f"{int(colour[5:7],16)},0.18)"),
             line_color="rgba(0,0,0,0)",
             showlegend=False, hoverinfo="skip",
         ), row=1, col=col_idx)
 
-        # ABM — solid, filled circle marker
+        # ABM — solid line
         fig.add_trace(go.Scatter(
             x=BJS_YEARS, y=abm_m, mode="lines+markers",
-            name=g, legendgroup=g, showlegend=True,
-            line=dict(color=colour, width=2.8),
-            marker=dict(size=7, color=colour),
+            name=g, legendgroup=g, showlegend=False,
+            line=dict(color=colour, width=3.0),
+            marker=dict(size=9, color=colour),
             customdata=abm_sd,
             hovertemplate=(f"<b>ABM {g} Yr %{{x}}</b><br>"
-                           f"%{{y:.1f}}%"
-                           f"<br>σ: %{{customdata:.2f}} pp<extra></extra>"),
+                           f"%{{y:.1f}}%<br>σ: %{{customdata:.2f}} pp"
+                           f"<extra></extra>"),
         ), row=1, col=col_idx)
 
-        # BJS — dashed, open diamond marker, same colour, no legend entry
+        # BJS — dashed line, open diamond
         fig.add_trace(go.Scatter(
             x=BJS_YEARS, y=bjs_off, mode="lines+markers",
             name=f"BJS — {g}", legendgroup=g, showlegend=False,
-            line=dict(color=colour, width=1.8, dash="dash"),
-            marker=dict(symbol="diamond-open", size=6,
-                        color=colour, line=dict(width=1.5)),
+            line=dict(color=colour, width=2.2, dash="dash"),
+            marker=dict(symbol="diamond-open", size=9,
+                        color=colour, line=dict(width=2.0)),
             hovertemplate=(f"<b>BJS {g} Yr %{{x}}</b><br>"
                            f"%{{y:.1f}}%<extra></extra>"),
         ), row=1, col=col_idx)
 
-        # Δ labels at anchor years
+        # Δ labels at anchor years — large enough to read in print
         for j, anchor_yr in enumerate(ANCHOR_YEARS):
             i    = anchor_yr - 1
             diff = diffs[i]
-            anchor_y = (max(abm_m[i], bjs_off[i]) + 4 if j % 2 == 0
-                        else min(abm_m[i], bjs_off[i]) - 5)
+            anchor_y = (max(abm_m[i], bjs_off[i]) + 4.5 if j % 2 == 0
+                        else min(abm_m[i], bjs_off[i]) - 6.0)
             _add_gap_label(
                 fig, x=anchor_yr, y=anchor_y, diff=diff,
-                row=1, col=col_idx, fontsize=9,
+                row=1, col=col_idx, fontsize=14,
             )
 
+    # X-axis — every panel
     fig.update_xaxes(
         title_text="Years since release",
-        tickvals=BJS_YEARS, showgrid=False, range=[0.5, 9.5],
+        title_font=dict(size=16, family=_FONT_FAMILY),
+        tickfont=dict(size=14, family=_FONT_FAMILY),
+        tickvals=BJS_YEARS,
+        showgrid=False,
+        range=[0.5, 9.5],
     )
-    fig.update_yaxes(range=[23, 103], gridcolor=_C_GRID, zeroline=False)
-    fig.update_yaxes(title_text="Cumulative rearrest rate (%)", row=1, col=1)
 
+    # Y-axis — all panels
+    fig.update_yaxes(
+        range=[23, 108],                          # extra headroom for Δ labels
+        gridcolor=_C_GRID,
+        zeroline=False,
+        tickfont=dict(size=14, family=_FONT_FAMILY),
+    )
+
+    # Y-axis title — first panel only
+    fig.update_yaxes(
+        title_text="Cumulative rearrest rate (%)",
+        title_font=dict(size=16, family=_FONT_FAMILY),
+        row=1, col=1,
+    )
+
+    # Subplot titles (panel headers: Violent / Drug / Property / Public order)
     for ann in fig.layout.annotations:
-        ann.font = dict(size=12, family=_FONT_FAMILY, color="#1A2B3C")
+        ann.font = dict(size=18, family=_FONT_FAMILY, color="#1A2B3C")
 
     fig.update_layout(**_LAYOUT,
         title=dict(
             text=("<b>Stage 3 — Offense-Stratified Calibration: "
                   "ABM vs. BJS Empirical Targets</b><br>"
-                  "<sup style='color:#555'>Solid line = ABM calibrated  |  "
+                  "<sup style='color:#555; font-size:13px'>"
+                  "Solid line = ABM calibrated  |  "
                   "Dashed line = BJS NCJ 250975 target  |  "
-                  "Shaded band = 95% CI  |  "
                   "Alper et al. (2018), Table 7</sup>"),
-            font=dict(size=14, family=_FONT_FAMILY),
+            font=dict(size=20, family=_FONT_FAMILY),
             x=0.5, xanchor="center",
         ),
-        height=580,
+        # Taller aspect ratio — 4:3 instead of 2.4:1
+        # At textwidth (~6.5 in), 1000×750 renders at ~100 dpi before Springer scales it
         width=1400,
-        
-        # Legend sits just below x-axis labels, inside the bottom margin
-        #legend=dict(
-        #    orientation="h", x=0.5, y=-0.08, xanchor="center", yanchor="top",
-        #    tracegroupgap=8, font=dict(size=10, family=_FONT_FAMILY),
-        #    bgcolor="rgba(255,255,255,0.88)",
-        #    bordercolor="#CCCCCC", borderwidth=1,
-        #),
-        # Tight margins — gap-color strip moved into subtitle, b reduced
-        # margin=dict(t=90, b=80, l=80, r=30),
+        height=850,
+        margin=dict(t=110, b=50, l=90, r=30),
     )
 
-    # Gap colour strip just below the legend, tight to it
-    #_gap_legend_annotation(fig, x=0.5, y=-0.17)
     _save(fig, os.path.join(out_dir, "chart3_cumulative_by_offense.png"))
 
 
